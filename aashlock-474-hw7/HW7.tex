@@ -1,0 +1,211 @@
+\documentclass{assignment}
+\usepackage[pdftex]{graphicx}
+\usepackage{xcolor}
+\definecolor{LightGray}{gray}{0.95}
+\usepackage{fancyvrb, minted}
+\usepackage[letterpaper, margin = 2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{hyperref, url} 
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{listings}
+
+\newcommand{\R}{\mathbb{R}}
+
+\student{Aren Ashlock}   
+\semester{Spring 2024}                         
+\date{April 24, 2024}  
+
+\courselabel{COM S 474/574} 
+\exercisesheet{HW7}{Reinforcement Learning}
+
+\school{Department of Computer Science}
+\university{Iowa State University}
+
+\begin{document}
+\begin{problem}
+
+%----------------------------------------- 1 DONE -----------------------------------------
+
+\begin{enumerate}
+
+    \item Consider the "FrozenLake-v1" task (see \href{https://gymnasium.farama.org/environments/toy_text/frozen_lake/}{link}) and the $4 \times 4$ map (let \texttt{is\_slippery} be True). Recall the MDP $(S, \mathcal{A}, \mathcal{R}, \mathbb{P}, \gamma)$ and let $\gamma = 0.9:$
+    
+    \begin{enumerate}[label=(\alph*)]
+
+%---------------------------------------- 1A DONE -----------------------------------------
+    
+        \item What is the cardinality of $S$ (note: for a set $X$ of finite elements, the cardinality of $X$, $|X|$, refers to the number of elements in $X$)?
+
+        \color{blue}\textbf{Answer:}
+            16
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+%---------------------------------------- 1B DONE -----------------------------------------
+    
+        \item What is the cardinality of $\mathcal{A}$?
+
+        \color{blue}\textbf{Answer:}
+            4
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+%---------------------------------------- 1C DONE -----------------------------------------
+    
+        \item Consider the state-action pair with state $s$ being the fourth row and the third column of the map, and the action $a$ being 3 (move-up), what is $\mathcal{R}(s, a)$?
+
+        \color{blue}\textbf{Answer:} 
+            $\mathcal{R} = \begin{cases}
+                0 & 67\% \\
+                1 & 33\%
+            \end{cases}$
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+%---------------------------------------- 1D DONE -----------------------------------------
+    
+        \item Consider the same state-action pair from the above question, what is $\mathbb{P}(s, a)$?
+
+        \color{blue}\textbf{Answer:} 
+            $\mathbb{P} = \begin{cases}
+                15 \rightarrow 11 & 33\% \\
+                15 \rightarrow 14 & 33\% \\
+                15 \rightarrow 16 & 33\%
+            \end{cases}$
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+%---------------------------------------- 1E DONE -----------------------------------------
+    
+        \item Let $Q'(s, a) = 1, \forall s, a.$ Is $Q'$ the optimal Q function? Why?
+
+        \color{blue}\textbf{Answer:} 
+            $Q'$ is not the optimal policy because $Q'(s, a) = 1, \forall s, a$ essentially means that taking any action in any state is optimal. However, we know that some state-action pairs are not optimal since they will lose you the game (or not win as efficiently).
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+%---------------------------------------- 1F DONE -----------------------------------------
+    
+        \item Let the length of a single episode be 2 (rather than 100), $\gamma = 0.9$ and the policy $\pi(s) = 2, \forall s \in S$, consider the same state-action pair from (c), what is $V^{\pi}(s)$? Show me your calculation steps (or code). (Note: please give explicit values, not just the equations. If you plan to use programming to solve these problems (manual calculation is very possible with the modified episode length), you don’t need to install gym or run FrozenLake, your programming is to help you with something else, and it only requires basic and standard python packages.)
+
+        \color{blue}\textbf{Answer:} $V^{\pi}(s) = 1.9/7 = 0.2714$\\
+            $15 \rightarrow 16 = 0.9^0 \times 1 = 1$\\
+            $15 \rightarrow 11 \rightarrow 12 = 0.9^0 \times 0 + 0.9^1 \times 0 = 0$\\
+            $15 \rightarrow 11 \rightarrow 7 = 0.9^0 \times 0 + 0.9^1 \times 0 = 0$\\
+            $15 \rightarrow 11 \rightarrow 15 = 0.9^0 \times 0 + 0.9^1 \times 0 = 0$\\
+            $15 \rightarrow 15 \rightarrow 16 = 0.9^0 \times 0 + 0.9^1 \times 1 = 0.9$\\
+            $15 \rightarrow 15 \rightarrow 11 = 0.9^0 \times 0 + 0.9^1 \times 0 = 0$\\
+            $V15 \rightarrow 15 \rightarrow 15 = 0.9^0 \times 0 + 0.9^1 \times 0 = 0$
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+%-------------------------------------- 1G NOT DONE ---------------------------------------
+    
+        \item Consider a parameterized Q-function in the linear form, i.e.,
+
+        \begin{displaymath}
+            \hat{Q}(s, a; \omega, b) = \omega^T \begin{bmatrix}
+                s\\
+                a
+                \end{bmatrix} + b, \omega \in \mathbb{R}^d, b \in \mathbb{R}.
+            \tag*{(1-1)}
+        \end{displaymath}
+
+        \begin{enumerate}[label=\roman*.]
+
+%------------------------------------------------------------------------------------------
+
+%---------------------------------------- 1Gi DONE ----------------------------------------
+    
+        \item What is the value of $d$?
+
+        \color{blue}\textbf{Answer:} 
+            2
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+%---------------------------------------- 1Gii DONE ---------------------------------------
+    
+        \item Assume $\omega$ is a vector with all-one entries and $b = 2$. Is $\hat{Q}$ the optimal Q function? Why?
+
+        \color{blue}\textbf{Answer:} 
+            No, because the all-one entries makes it so that the max $\hat{Q}$ is when you move up since that has the highest encoded value. Therefore, it won't optimally converge to the optimum since we know you need to move down at some point.
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+%--------------------------------------- 1Giii DONE ---------------------------------------
+    
+        \item Consider the policy $\hat{\pi}(s) = \text{arg max}_a \hat{Q}(s, a; \omega, b),$ and any linear Q-function of the form (1-1). For any fixed set of parameters satisfying $\omega \neq \textbf{0}, b \neq 0,$ is it possible to have different action selections for different states with the given policy and $\hat{Q}$? Why?
+
+        \color{blue}\textbf{Answer:} 
+            Yes, because $\omega$ and $b$ affect the state-action pairs differently based on the values given to $\omega$ and $b$. This is combined with the fact that the environment is stochastic, so there is probability involved in the action that is taken. Therefore, it is possible to have different action selections for different states.
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+%---------------------------------------- 1Giv DONE ---------------------------------------
+    
+        \item Consider the parameterized Q-function as described in (1-1), and let $\omega$ be a vector with all-one entries and $b = 2$. Given $(s, a)$ the same state-action pair from (c), let $s'$ be the third-row and the third-column of the map, what is the \textit{temporal difference value,} $\delta,$ given the transition $(s, a, s')$? What is the Huber loss value given the transition $(s, a, s')$? (Please give both the equation and the explicit value output.)
+
+        \color{blue}
+            \textbf{Temporal Difference Value:} $\delta = r + \gamma max_{a'} Q(s', a'; \theta) - Q(s, a; \theta) =  0 + 0.9 \times (1(11) + 1(3) + 2) - (1(15) + 1(3) + 2) = 0 + 0.9 \times 16 - 20 = 0 + 14.4 - 20 = -5.6$\\
+            \textbf{Huber Loss:} First, determine which equation to use. $|y - Q(s, a; \theta)| = |0 + 0.9(1(11) + 1(3) + 2) - (1(15) + 1(3) + 2)| = |0 + 0.9(16) - 20| = |0 + 14.4 - 20| = |-5.6| = 5.6$, which $5.6 > 1$, so I will use the 2nd equation for Huber loss...\\
+            $L(\theta) = \delta \times (|y - Q(s, a; \theta)| - \frac{1}{2}\delta) = 1 \times (5.6 - \frac{1}{2}(1)) = 5.6 - 0.5 = 5.1$
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+        \end{enumerate}
+    \end{enumerate}
+
+%----------------------------------------- 2 DONE -----------------------------------------
+
+    \item Should "epsilon greedy policy" and "experience replay" typically used in DQN training also be used in all tabular Q-learning tasks? If yes, why? If no, should they at least be considered for some tabular Q-learning tasks? What qualities should those tasks have?
+
+    \color{blue}\textbf{Answer:} 
+            I don't think "epsilon greedy policy" and "experience replay" should be used in ALL tabular Q-learning tasks. Typically, tabular is used when the table of states and actions will be smaller, so exploitation is typically favored. However, the two techniques should be considered when the table is larger or sparse. This would allow for more exploration to be more efficient and converge faster towards the optimum.
+    \color{black}
+    
+%------------------------------------------------------------------------------------------
+
+%----------------------------------------- 3 DONE -----------------------------------------
+
+    \item Read the paper \href{https://arxiv.org/pdf/1509.06461.pdf}{Deep Reinforcement Learning with Double Q-learning}.
+
+    \begin{enumerate}[label=(\alph*)]
+
+%---------------------------------------- 3A DONE -----------------------------------------
+    
+        \item In comparison with DQN learning introduced in the lecture, what makes the proposal different? What are the advantages? What are the disadvantages?
+
+        \color{blue}\textbf{Answer:} 
+            This proposal is different because DQN calculates the target value using only 1 set of weight parameters, whereas the proposal calculates with 2 different sets of weight parameters. In the proposal, $\theta$ is for estimating while $\theta'$ is for evaluating. The advantage is that this proposal handles overestimation, which is a known issue with DQN. As for a disadvantage, having to calculate based on 2 different sets of weights adds overhead.
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+%---------------------------------------- 3B DONE -----------------------------------------
+    
+        \item Consider the tabular Q-learning algorithm (i.e., equation (10) on page 17 of the 9-RL-I slides), how would you implement a tabular double-Q learning algorithm? Write down the updates in equation(s) following a format that is \textbf{as close as possible} to equation (10) in our lecture slides.
+
+        \color{blue}\textbf{Answer:} My answer utilizes two Q-tables with each update referencing the other table...\\
+            $Q_1(s,a) = (1 - \alpha)Q_1(s,a) + \alpha(r + \gamma Q_2(s', max_{a'} Q_1(s',a')))$\\
+            $Q_2(s,a) = (1 - \alpha)Q_2(s,a) + \alpha(r + \gamma Q_1(s', max_{a'} Q_2(s',a')))$
+        \color{black}
+
+%------------------------------------------------------------------------------------------
+
+    \end{enumerate}
+\end{enumerate}
+\end{problem}
+\end{document}
